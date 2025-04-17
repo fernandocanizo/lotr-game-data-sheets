@@ -23,13 +23,15 @@ export type Gear = {
   uDefense: number
 }
 
+const defaultImg = "https://placehold.co/200"
+
 export const gear = [
   {
     type: "purple",
     spendable: false,
     bestFor: "physical damage dealer",
     name: "Battle Axe",
-    img: "/img/default.png",
+    img: defaultImg,
     cDamage: "5-7",
     cHp: 0,
     cCommand: 0,
@@ -45,7 +47,7 @@ export const gear = [
     spendable: true,
     bestFor: "nothing",
     name: "Uruk Crossbow",
-    img: "/img/default.png",
+    img: defaultImg,
     cDamage: "0-0",
     cHp: 0,
     cCommand: 55,
