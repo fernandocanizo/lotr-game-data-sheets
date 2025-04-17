@@ -4,6 +4,7 @@ import type { Gear } from "../data/gear.ts"
 import { Handlers, PageProps } from "$fresh/server.ts"
 
 import { gear } from "../data/gear.ts"
+import GearCard from "../components/GearCard.tsx"
 
 type GearFilter = "all" | "spendable" | "preservable"
 
@@ -31,9 +32,9 @@ export const handler: Handlers<Data> = {
 
 export default function Gear({ data }: PageProps<Data>) {
   const { filteredGear, filter } = data
-console.debug(filter)
+
   return (
-    <div class="h-96 w-full overflow-scroll">
+    <div class="w-full">
       <nav class="rounded-lg border shadow-lg overflow-hidden p-2 bg-white border-stone-200 shadow-stone-950/5 sticky top-0 mx-auto w-full max-w-screen-xl">
         <div class="flex items-center">
           <a href="#" class="font-sans antialiased text-sm text-current ml-2 mr-2 block py-1 font-semibold">LOTR Data Sheets</a>
@@ -94,10 +95,9 @@ console.debug(filter)
           </fieldset>
         </form>
 
-        <ul>
-          {filteredGear.map(v => <li key={v.name}>{v.name}</li>)}
-        </ul>
-
+        <div class="mt-3 flex">
+          {filteredGear.map(v => <GearCard gear={v} />)}
+        </div>
       </main>
     </div>
   )
