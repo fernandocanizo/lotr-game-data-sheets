@@ -1,4 +1,37 @@
-export default function Gear() {
+import type { FreshContext } from "$fresh/server.ts"
+import type { Gear } from "../data/gear.ts"
+
+import { Handlers, PageProps } from "$fresh/server.ts"
+
+import { gear } from "../data/gear.ts"
+
+type GearFilter = "all" | "spendable" | "preservable"
+
+type Data = {
+  filteredGear: Gear[]
+  filter: GearFilter
+}
+
+export const handler: Handlers<Data> = {
+  GET(req: Request, ctx: FreshContext) {
+    const url = new URL(req.url)
+    const filter = url.searchParams.get("gear")?.toLowerCase() ?? ""
+    if (filter === "spendable") {
+      const filteredGear = gear.filter(v => v.spendable)
+      return ctx.render({ filteredGear, filter })
+    } else if (filter === "preservable") {
+      const filteredGear = gear.filter(v => !v.spendable)
+      return ctx.render({ filteredGear, filter })
+    }
+
+    // else return all available gear
+    return ctx.render({ filteredGear: gear, filter })
+  },
+}
+
+export default function Gear({ data }: PageProps<Data>) {
+  const { filteredGear, filter } = data
+console.debug(filter)
   return (
     <div class="h-96 w-full overflow-scroll">
       <nav class="rounded-lg border shadow-lg overflow-hidden p-2 bg-white border-stone-200 shadow-stone-950/5 sticky top-0 mx-auto w-full max-w-screen-xl">
@@ -25,7 +58,7 @@ export default function Gear() {
                   type="radio"
                   name="gear"
                   value="all"
-                  checked
+                  checked={filter === "all"}
                   class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
                 <span class="text-gray-900 font-medium">All</span>
@@ -35,6 +68,7 @@ export default function Gear() {
                   type="radio"
                   name="gear"
                   value="spendable"
+                  checked={filter === "spendable"}
                   class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
                 <span class="text-gray-900 font-medium">Spendable</span>
@@ -44,6 +78,7 @@ export default function Gear() {
                   type="radio"
                   name="gear"
                   value="preservable"
+                  checked={filter === "preservable"}
                   class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
                 <span class="text-gray-900 font-medium">Preservable</span>
@@ -58,6 +93,11 @@ export default function Gear() {
             </div>
           </fieldset>
         </form>
+
+        <ul>
+          {filteredGear.map(v => <li key={v.name}>{v.name}</li>)}
+        </ul>
+
       </main>
     </div>
   )
