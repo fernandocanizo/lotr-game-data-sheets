@@ -37,6 +37,7 @@ export default function GearCard({ gear }: { gear: Gear }) {
           <li><strong>Unit Defense:</strong>&nbsp; {gear.uDefense}</li>
           }
         </ul>
+        <h6 class="font-sans antialiased text-base md:text-lg lg:text-xl text-lime-500 my-1">Best for: {gear.bestFor}</h6>
       </div>
     </div>
   )
