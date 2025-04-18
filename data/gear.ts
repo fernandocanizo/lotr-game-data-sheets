@@ -32,6 +32,9 @@ export type Gear = {
   cInitiative: number
   uAttack: number
   uDefense: number
+  // Only a single gear has `uSiege`, so I make it optional to avoid putting it
+  // in every gear
+  uSiege?: number,
 }
 
 export const defaultImg = "https://placehold.co/200"

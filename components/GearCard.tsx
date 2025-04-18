@@ -36,7 +36,7 @@ export default function GearCard({ gear }: { gear: Gear }) {
           {gear.uDefense === 0 ? null :
             <li><strong>Unit Defense:</strong>&nbsp; {gear.uDefense}</li>
           }
-          {gear.uSiege === 0 ? null :
+          {!gear.uSiege || gear.uSiege === 0 ? null :
             <li><strong>Unit Siege:</strong>&nbsp; {gear.uSiege}%</li>
           }
         </ul>
