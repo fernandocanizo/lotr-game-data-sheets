@@ -16,25 +16,28 @@ export default function GearCard({ gear }: { gear: Gear }) {
             <li><strong>Commander HP:</strong>&nbsp; {gear.cHp}</li>
           }
           {gear.cCommand === 0 ? null :
-          <li><strong>Commander Command:</strong>&nbsp; {gear.cCommand}</li>
+            <li><strong>Commander Command:</strong>&nbsp; {gear.cCommand}</li>
           }
           {gear.cAttack === 0 ? null :
-          <li><strong>Commander Attack:</strong>&nbsp; {gear.cAttack}</li>
+            <li><strong>Commander Attack:</strong>&nbsp; {gear.cAttack}</li>
           }
           {gear.cDefense === 0 ? null :
-          <li><strong>Commander Defense:</strong>&nbsp; {gear.cDefense}</li>
+            <li><strong>Commander Defense:</strong>&nbsp; {gear.cDefense}</li>
           }
           {gear.cFocus === 0 ? null :
-          <li><strong>Commander Focus:</strong>&nbsp; {gear.cFocus}</li>
+            <li><strong>Commander Focus:</strong>&nbsp; {gear.cFocus}</li>
           }
           {gear.cInitiative === 0 ? null :
-          <li><strong>Commander Initiative:</strong>&nbsp; {gear.cInitiative}</li>
+            <li><strong>Commander Initiative:</strong>&nbsp; {gear.cInitiative}</li>
           }
           {gear.uAttack === 0 ? null :
-          <li><strong>Unit Attack:</strong>&nbsp; {gear.uAttack}</li>
+            <li><strong>Unit Attack:</strong>&nbsp; {gear.uAttack}</li>
           }
           {gear.uDefense === 0 ? null :
-          <li><strong>Unit Defense:</strong>&nbsp; {gear.uDefense}</li>
+            <li><strong>Unit Defense:</strong>&nbsp; {gear.uDefense}</li>
+          }
+          {gear.uSiege === 0 ? null :
+            <li><strong>Unit Siege:</strong>&nbsp; {gear.uSiege}%</li>
           }
         </ul>
         <h6 class="font-sans antialiased text-base md:text-lg lg:text-xl text-lime-500 my-1">Best for: {gear.bestFor}</h6>
