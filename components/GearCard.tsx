@@ -1,9 +1,11 @@
 import type { Gear } from "../data/gear.ts"
 
 export default function GearCard({ gear }: { gear: Gear }) {
+  const imgFolder = "/img/gear/"
+
   return (
-    <div class="w-full rounded-lg border shadow-sm overflow-hidden bg-white border-stone-200 shadow-stone-950/5 max-w-xs">
-      <img src={gear.img} alt={gear.name} class="w-[calc(100%-16px)] h-max rounded m-2" />
+    <div class="w-full min-w-[180px] max-w-xs rounded-lg border shadow-sm overflow-hidden bg-white border-stone-200 shadow-stone-950/5">
+      <img src={`${imgFolder}${gear.img}`} alt={gear.name} class="w-[calc(100%-16px)] h-max rounded m-2" />
       <div class="w-full h-max rounded px-3.5 py-2.5">
         <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current my-1">{gear.name}</h6>
         <ul class="list-disc list-inside space-y-2 text-gray-700 ">

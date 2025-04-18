@@ -95,7 +95,7 @@ export default function Gear({ data }: PageProps<Data>) {
           </fieldset>
         </form>
 
-        <div class="mt-3 flex">
+        <div class="mt-3 flex flex-wrap gap-4">
           {filteredGear.map(v => <GearCard gear={v} />)}
         </div>
       </main>
