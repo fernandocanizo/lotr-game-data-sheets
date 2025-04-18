@@ -1,5 +1,5 @@
 import type { FreshContext } from "$fresh/server.ts"
-import type { Gear } from "../data/gear.ts"
+import type { Gear, GearColorTier } from "../data/gear.ts"
 
 import { Handlers, PageProps } from "$fresh/server.ts"
 
@@ -11,27 +11,35 @@ type GearFilter = "all" | "spendable" | "preservable"
 type Data = {
   filteredGear: Gear[]
   filter: GearFilter
+  tiers: GearColorTier[]
 }
 
 export const handler: Handlers<Data> = {
   GET(req: Request, ctx: FreshContext) {
     const url = new URL(req.url)
     const filter = url.searchParams.get("gear")?.toLowerCase() ?? ""
+    const goldenTier = url.searchParams.get("tier-golden")?.toLowerCase() ?? ""
+    const purpleTier = url.searchParams.get("tier-purple")?.toLowerCase() ?? ""
+    const blueTier = url.searchParams.get("tier-blue")?.toLowerCase() ?? ""
+    const greenTier = url.searchParams.get("tier-green")?.toLowerCase() ?? ""
+
+    const tiers = [goldenTier, purpleTier, blueTier, greenTier].filter(v => v)
+    let filteredGear = gear
+
     if (filter === "spendable") {
-      const filteredGear = gear.filter(v => v.spendable)
-      return ctx.render({ filteredGear, filter })
+      filteredGear = gear.filter(v => v.spendable)
     } else if (filter === "preservable") {
-      const filteredGear = gear.filter(v => !v.spendable)
-      return ctx.render({ filteredGear, filter })
+      filteredGear = gear.filter(v => !v.spendable)
     }
 
-    // else return all available gear
-    return ctx.render({ filteredGear: gear, filter })
+    // else return all available gear filtered by tier
+    filteredGear = filteredGear.filter(v => tiers.includes(v.tier))
+    return ctx.render({ filteredGear, filter, tiers })
   },
 }
 
 export default function Gear({ data }: PageProps<Data>) {
-  const { filteredGear, filter } = data
+  const { filteredGear, filter, tiers } = data
 
   return (
     <div class="w-full">
@@ -51,6 +59,53 @@ export default function Gear({ data }: PageProps<Data>) {
 
       <main class="w-full p-6">
         <form method="get">
+          <fieldset class="border border-gray-200 rounded-md p-4">
+            <legend class="text-lg font-semibold text-gray-700 mb-2">Select tier</legend>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="tier-golden"
+                  value="golden"
+                  checked={tiers.includes("golden")}
+                  class="w-5 h-5 accent-yellow-300 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Flawless (golden)</span>
+              </label>
+
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="tier-purple"
+                  value="purple"
+                  checked={tiers.includes("purple")}
+                  class="w-5 h-5 accent-purple-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Exquisite (purple)</span>
+              </label>
+
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="tier-blue"
+                  value="blue"
+                  checked={tiers.includes("blue")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Fine (blue)</span>
+              </label>
+
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="tier-green"
+                  value="green"
+                  checked={tiers.includes("green")}
+                  class="w-5 h-5 accent-lime-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Superior (green)</span>
+              </label>
+          </fieldset>
+
           <fieldset class="border border-gray-200 rounded-md p-4">
             <legend class="text-lg font-semibold text-gray-700 mb-2">Select which gear to show</legend>
             <div class="flex flex-col gap-3">
