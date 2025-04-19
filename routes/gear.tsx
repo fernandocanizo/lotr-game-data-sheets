@@ -1,5 +1,5 @@
 import type { FreshContext } from "$fresh/server.ts"
-import type { Gear, GearColorTier } from "../data/gear.ts"
+import type { Gear, GearColorTier, GearType } from "../data/gear.ts"
 
 import { Handlers, PageProps } from "$fresh/server.ts"
 
@@ -12,18 +12,26 @@ type Data = {
   filteredGear: Gear[]
   filter: GearFilter
   tiers: GearColorTier[]
+  types: GearType[]
 }
 
 export const handler: Handlers<Data> = {
   GET(req: Request, ctx: FreshContext) {
     const url = new URL(req.url)
     const filter = url.searchParams.get("gear")?.toLowerCase() ?? ""
+
     const goldenTier = url.searchParams.get("tier-golden")?.toLowerCase() ?? ""
     const purpleTier = url.searchParams.get("tier-purple")?.toLowerCase() ?? ""
     const blueTier = url.searchParams.get("tier-blue")?.toLowerCase() ?? ""
     const greenTier = url.searchParams.get("tier-green")?.toLowerCase() ?? ""
-
     const tiers = [goldenTier, purpleTier, blueTier, greenTier].filter(v => v)
+
+    const weaponType = url.searchParams.get("type-weapon")?.toLowerCase() ?? ""
+    const helmetType = url.searchParams.get("type-helmet")?.toLowerCase() ?? ""
+    const armorType = url.searchParams.get("type-armor")?.toLowerCase() ?? ""
+    const accessoryType = url.searchParams.get("type-accessory")?.toLowerCase() ?? ""
+    const types = [weaponType, helmetType, armorType, accessoryType].filter(v => v)
+
     let filteredGear = gear
 
     if (filter === "spendable") {
@@ -34,12 +42,13 @@ export const handler: Handlers<Data> = {
 
     // else return all available gear filtered by tier
     filteredGear = filteredGear.filter(v => tiers.includes(v.tier))
-    return ctx.render({ filteredGear, filter, tiers })
+    filteredGear = filteredGear.filter(v => types.includes(v.type))
+    return ctx.render({ filteredGear, filter, tiers, types })
   },
 }
 
 export default function Gear({ data }: PageProps<Data>) {
-  const { filteredGear, filter, tiers } = data
+  const { filteredGear, filter, tiers, types } = data
 
   return (
     <div class="w-full">
@@ -103,6 +112,50 @@ export default function Gear({ data }: PageProps<Data>) {
                   class="w-5 h-5 accent-lime-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
                 <span class="text-gray-900 font-medium">Superior (green)</span>
+              </label>
+          </fieldset>
+
+          <fieldset class="border border-gray-200 rounded-md p-4">
+            <legend class="text-lg font-semibold text-gray-700 mb-2">Select gear type</legend>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="type-weapon"
+                  value="weapon"
+                  checked={types.includes("weapon")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Weapon</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="type-helmet"
+                  value="helmet"
+                  checked={types.includes("helmet")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Helmet</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="type-armor"
+                  value="armor"
+                  checked={types.includes("armor")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Armor</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="type-accessory"
+                  value="accessory"
+                  checked={types.includes("accessory")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Accessory</span>
               </label>
           </fieldset>
 
