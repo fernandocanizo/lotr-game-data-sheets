@@ -8,6 +8,8 @@ export default function GearCard({ gear }: { gear: Gear }) {
       <img src={`${imgFolder}${gear.img}`} alt={gear.name} class="w-[calc(100%-16px)] h-max rounded m-2" />
       <div class="w-full h-max rounded px-3.5 py-2.5">
         <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current my-1">{gear.name}</h6>
+        <h5 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-stone-500 my-1">({gear.type})</h5>
+
         <ul class="list-disc list-inside space-y-2 text-gray-700 ">
           {gear.cDamage === "0-0" ? null :
             <li><strong>Commander Damage:</strong>&nbsp; {gear.cDamage}</li>
