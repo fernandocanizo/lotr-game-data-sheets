@@ -203,6 +203,8 @@ export default function Gear({ data }: PageProps<Data>) {
           </fieldset>
         </form>
 
+        <h1 class="font-sans antialiased font-bold text-base md:text-xl lg:text-2xl text-current text-center my-1">Total filtered gear: <strong>{filteredGear.length}</strong></h1>
+
         <div class="mt-3 flex flex-wrap gap-4">
           {filteredGear.map(v => <GearCard gear={v} />)}
         </div>
