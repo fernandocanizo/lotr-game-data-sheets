@@ -1,5 +1,5 @@
 import type { FreshContext } from "$fresh/server.ts"
-import type { Gear, GearColorTier, GearType } from "../data/gear.ts"
+import type { Gear, GearColorTier, GearType, GearCapability } from "../data/gear.ts"
 
 import { Handlers, PageProps } from "$fresh/server.ts"
 
@@ -13,6 +13,7 @@ type Data = {
   filter: GearFilter
   tiers: GearColorTier[]
   types: GearType[]
+  capabilities: GearCapability[]
 }
 
 export const handler: Handlers<Data> = {
@@ -32,6 +33,14 @@ export const handler: Handlers<Data> = {
     const accessoryType = url.searchParams.get("type-accessory")?.toLowerCase() ?? ""
     const types = [weaponType, helmetType, armorType, accessoryType].filter(v => v)
 
+    const capTroopAttack = url.searchParams.get("capability-troop-attack")?.toLowerCase() ?? ""
+    const capTank = url.searchParams.get("capability-tank")?.toLowerCase() ?? ""
+    const capPhysical = url.searchParams.get("capability-physical")?.toLowerCase() ?? ""
+    const capFocus = url.searchParams.get("capability-focus")?.toLowerCase() ?? ""
+    console.debug(capTroopAttack, capTank, capPhysical, capFocus)
+    const capabilities = [capTroopAttack, capTank, capPhysical, capFocus].filter(v => v)
+    console.debug(capabilities)
+
     let filteredGear = gear
 
     if (filter === "spendable") {
@@ -43,12 +52,13 @@ export const handler: Handlers<Data> = {
     // else return all available gear filtered by tier
     filteredGear = filteredGear.filter(v => tiers.includes(v.tier))
     filteredGear = filteredGear.filter(v => types.includes(v.type))
-    return ctx.render({ filteredGear, filter, tiers, types })
+    filteredGear = filteredGear.filter(v => capabilities.includes(v.bestFor))
+    return ctx.render({ filteredGear, filter, tiers, types, capabilities })
   },
 }
 
 export default function Gear({ data }: PageProps<Data>) {
-  const { filteredGear, filter, tiers, types } = data
+  const { filteredGear, filter, tiers, types, capabilities } = data
 
   return (
     <div class="w-full">
@@ -156,6 +166,50 @@ export default function Gear({ data }: PageProps<Data>) {
                   class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
                 <span class="text-gray-900 font-medium">Accessory</span>
+              </label>
+          </fieldset>
+
+          <fieldset class="border border-gray-200 rounded-md p-4">
+            <legend class="text-lg font-semibold text-gray-700 mb-2">Select by gear capability</legend>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="capability-troop-attack"
+                  value="troop attack"
+                  checked={capabilities.includes("troop attack")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Troop Attack</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="capability-tank"
+                  value="tank"
+                  checked={capabilities.includes("tank")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Tank (Troop Defense)</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="capability-physical"
+                  value="physical commander"
+                  checked={capabilities.includes("physical commander")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Physical Commander (typical "Damage Dealer")</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer gap-2 mr-2">
+                <input
+                  type="checkbox"
+                  name="capability-focus"
+                  value="focus commander"
+                  checked={capabilities.includes("focus commander")}
+                  class="w-5 h-5 accent-blue-600 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <span class="text-gray-900 font-medium">Focus Commander</span>
               </label>
           </fieldset>
 
