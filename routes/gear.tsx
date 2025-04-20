@@ -37,9 +37,7 @@ export const handler: Handlers<Data> = {
     const capTank = url.searchParams.get("capability-tank")?.toLowerCase() ?? ""
     const capPhysical = url.searchParams.get("capability-physical")?.toLowerCase() ?? ""
     const capFocus = url.searchParams.get("capability-focus")?.toLowerCase() ?? ""
-    console.debug(capTroopAttack, capTank, capPhysical, capFocus)
     const capabilities = [capTroopAttack, capTank, capPhysical, capFocus].filter(v => v)
-    console.debug(capabilities)
 
     let filteredGear = gear
 
