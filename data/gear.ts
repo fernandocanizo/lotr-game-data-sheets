@@ -37,6 +37,16 @@ export type Gear = {
   uSiege?: number,
 }
 
+export type GearSortableFields = 
+  "cHp" |
+  "cCommand" |
+  "cAttack" |
+  "cDefense" |
+  "cFocus" |
+  "cInitiative" |
+  "uAttack" |
+  "uDefense"
+
 export const defaultImg = "https://placehold.co/200"
 
 export const gear = [

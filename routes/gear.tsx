@@ -1,5 +1,5 @@
 import type { FreshContext } from "$fresh/server.ts"
-import type { Gear, GearColorTier, GearType, GearCapability } from "../data/gear.ts"
+import type { Gear, GearColorTier, GearType, GearCapability, GearSortableFields } from "../data/gear.ts"
 
 import { Handlers, PageProps } from "$fresh/server.ts"
 
@@ -14,6 +14,7 @@ type Data = {
   tiers: GearColorTier[]
   types: GearType[]
   capabilities: GearCapability[]
+  sortBy: "none" | GearSortableFields
 }
 
 export const handler: Handlers<Data> = {
@@ -39,6 +40,8 @@ export const handler: Handlers<Data> = {
     const capFocus = url.searchParams.get("capability-focus")?.toLowerCase() ?? ""
     const capabilities = [capTroopAttack, capTank, capPhysical, capFocus].filter(v => v)
 
+    const sortBy = url.searchParams.get("sort-by") ?? ""
+
     let filteredGear = gear
 
     if (filter === "spendable") {
@@ -51,12 +54,19 @@ export const handler: Handlers<Data> = {
     filteredGear = tiers.length ? filteredGear.filter(v => tiers.includes(v.tier)) : filteredGear
     filteredGear = types.length ? filteredGear.filter(v => types.includes(v.type)) : filteredGear
     filteredGear = capabilities.length ? filteredGear.filter(v => capabilities.includes(v.bestFor)) : filteredGear
-    return ctx.render({ filteredGear, filter, tiers, types, capabilities })
+
+    if (sortBy && sortBy !== "none") {
+      filteredGear.sort((a, b) => {
+        return b[sortBy as GearSortableFields] - a[sortBy as GearSortableFields]
+      })
+    }
+
+    return ctx.render({ filteredGear, filter, tiers, types, capabilities, sortBy })
   },
 }
 
 export default function Gear({ data }: PageProps<Data>) {
-  const { filteredGear, filter, tiers, types, capabilities } = data
+  const { filteredGear, filter, tiers, types, capabilities, sortBy } = data
 
   return (
     <div class="w-full">
@@ -209,6 +219,24 @@ export default function Gear({ data }: PageProps<Data>) {
                 />
                 <span class="text-gray-900 font-medium">Focus Commander</span>
               </label>
+          </fieldset>
+
+          <fieldset class="border border-gray-200 rounded-md p-4">
+            <legend class="text-lg font-semibold text-gray-700 mb-2">Sort by</legend>
+            <label class="block text-sm font-medium text-stone-700 mb-1">Choose an option to sort by:</label>
+            <select name="sort-by"
+              class="block rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900 shadow-sm shadow-stone-950/5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition disabled:opacity-50 disabled:pointer-events-none"
+            >
+              <option value="none" selected={sortBy === "none"}>None</option>
+              <option value="cHp" selected={sortBy === "cHp"}>Commander HP</option>
+              <option value="cCommand" selected={sortBy === "cCommand"}>Commander Command</option>
+              <option value="cAttack" selected={sortBy === "cAttack"}>Commander Attack</option>
+              <option value="cDefense" selected={sortBy === "cDefense"}>Commander Defense</option>
+              <option value="cFocus" selected={sortBy === "cFocus"}>Commander Focus</option>
+              <option value="cInitiative" selected={sortBy === "cInitiative"}>Commander Initiative</option>
+              <option value="uAttack" selected={sortBy === "uAttack"}>Unit Attack</option>
+              <option value="uDefense" selected={sortBy === "uDefense"}>Unit Defense</option>
+            </select>
           </fieldset>
 
           <fieldset class="border border-gray-200 rounded-md p-4">
