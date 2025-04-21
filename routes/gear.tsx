@@ -47,10 +47,10 @@ export const handler: Handlers<Data> = {
       filteredGear = gear.filter(v => !v.spendable)
     }
 
-    // else return all available gear filtered by tier
-    filteredGear = filteredGear.filter(v => tiers.includes(v.tier))
-    filteredGear = filteredGear.filter(v => types.includes(v.type))
-    filteredGear = filteredGear.filter(v => capabilities.includes(v.bestFor))
+    // else return all available gear filtered by tier, and/or type and/or capability
+    filteredGear = tiers.length ? filteredGear.filter(v => tiers.includes(v.tier)) : filteredGear
+    filteredGear = types.length ? filteredGear.filter(v => types.includes(v.type)) : filteredGear
+    filteredGear = capabilities.length ? filteredGear.filter(v => capabilities.includes(v.bestFor)) : filteredGear
     return ctx.render({ filteredGear, filter, tiers, types, capabilities })
   },
 }
