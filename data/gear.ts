@@ -1940,7 +1940,7 @@ export const gear = [
   },
   {
     name: "Mattock of the Iron Hills",
-    img: "golden-w-lhang.jpg",
+    img: "golden-w-mattock.of.the.iron.hills.jpg",
     tier: "golden",
     type: "weapon",
     spendable: true,
@@ -1974,7 +1974,7 @@ export const gear = [
   },
   {
     name: "Nightfall",
-    img: "golden-w-morgul.blade.jpg",
+    img: "golden-w-nightfall.jpg",
     tier: "golden",
     type: "weapon",
     spendable: true,
